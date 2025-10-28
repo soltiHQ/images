@@ -1,4 +1,3 @@
-LABEL org.opencontainers.image.source="https://github.com/soltiHQ/images"
 ARG RUST_VERSION
 
 FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-slim
