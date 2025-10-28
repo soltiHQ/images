@@ -29,7 +29,7 @@ tasks:
       - |
         docker buildx build \
           --platform {{.platforms | default .default_platforms}} \
-          --file {{.dockerfile | default (print .CONTEXT "/Dockerfile")}} \
+          --file {{.dockerfile | default (print .base_context "/" .CONTEXT "/Dockerfile")}} \
           {{.BUILD_ARGS}} \
           -t {{.registry}}/{{.CONTEXT}}:{{.TAG}} \
           -t {{.registry}}/{{.CONTEXT}}:latest \
@@ -49,6 +49,6 @@ tasks:
       - task: _docker/buildx
         vars:
           TAG: "{{.VERSION}}"
-          CONTEXT: "{{.base_context}}/cargo-tools"
+          CONTEXT: "cargo-tools"
           BUILD_ARGS: >-
             --build-arg RUST_VERSION={{.VERSION}}
