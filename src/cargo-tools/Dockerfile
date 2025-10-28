@@ -7,5 +7,6 @@ RUN rustup set profile minimal \
 
 WORKDIR /
 
+
 ENTRYPOINT ["cargo"]
 CMD ["--help"]
