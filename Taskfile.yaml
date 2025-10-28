@@ -34,7 +34,7 @@ tasks:
           -t {{.registry}}/{{.CONTEXT}}:{{.TAG}} \
           -t {{.registry}}/{{.CONTEXT}}:latest \
           --push \
-          {{.context_path | default (print "./" .CONTEXT)}}
+          {{.context_path | default (print "./" .base_context "/" .CONTEXT)}}
 
 # ================================================#
 # ---------------------IMAGES---------------------#
