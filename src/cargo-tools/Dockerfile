@@ -6,5 +6,6 @@ RUN rustup set profile minimal \
  && rustup component add rustfmt clippy
 
 WORKDIR /
+
 ENTRYPOINT ["cargo"]
 CMD ["--help"]
