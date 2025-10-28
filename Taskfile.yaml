@@ -1,0 +1,54 @@
+version: '3'
+
+vars:
+  git_root:
+    sh: git rev-parse --show-toplevel
+
+  default_platforms: linux/amd64,linux/arm64
+  base_context: src
+  registry: "ghcr.io/soltihq"
+
+  default_rust_ver: "1.90"
+
+tasks:
+  default:
+    desc: Show usage
+    cmds:
+      - echo "Please enter a task or use '-l' or '--list-all' to list all available tasks"
+    silent: true
+
+# ================================================#
+# ---------------------INTERNAL-------------------#
+# ================================================#
+
+  _docker/buildx:
+    internal: true
+    silent: true
+    dir: "{{.git_root}}"
+    cmds:
+      - |
+        docker buildx build \
+          --platform {{.platforms | default .default_platforms}} \
+          --file {{.dockerfile | default (print .CONTEXT "/Dockerfile")}} \
+          {{.BUILD_ARGS}} \
+          -t {{.registry}}/{{.CONTEXT}}:{{.TAG}} \
+          -t {{.registry}}/{{.CONTEXT}}:latest \
+          --push \
+          {{.context_path | default (print "./" .CONTEXT)}}
+
+# ================================================#
+# ---------------------IMAGES---------------------#
+# ================================================#
+
+  cargo-tools:
+    desc: Build 'cargo-tools' image.
+    silent: true
+    vars:
+      VERSION: "{{.default_rust_ver}}"
+    cmds:
+      - task: _docker/buildx
+        vars:
+          TAG: "{{.VERSION}}"
+          CONTEXT: "{{.base_context}}/cargo-tools"
+          BUILD_ARGS: >-
+            --build-arg RUST_VERSION={{.VERSION}}
