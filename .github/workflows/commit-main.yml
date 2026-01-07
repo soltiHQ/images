@@ -26,19 +26,34 @@ jobs:
         with:
           files: src/**
           dir_names: true
-          dir_names_max_depth: 2
+          dir_names_max_depth: 3
 
       - name: Prepare matrix
         id: get-changes
         run: |
           if [ -n "${{ steps.changed-files.outputs.all_changed_files }}" ]; then
-            MATRIX=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | cut -d/ -f2 | sort -u | jq -R . | jq -s -c .)
+            MATRIX="["
+            FIRST=true
+          
+            for path in ${{ steps.changed-files.outputs.all_changed_files }}; do
+              DIR=$(echo "$path" | cut -d'/' -f2)
+              VERSION=$(echo "$path" | cut -d'/' -f3)
+          
+              [ "$FIRST" = true ] || MATRIX+=","
+              FIRST=false
+          
+              MATRIX+="{\"dir\":\"$DIR\",\"version\":\"$VERSION\"}"
+            done
+          
+            MATRIX+="]"
+            MATRIX=$(echo "$MATRIX" | jq -c 'unique')
           else
             MATRIX="[]"
           fi
+          
           echo "changes=$MATRIX" >> "$GITHUB_OUTPUT"
           echo "Changed directories: $MATRIX"
-          
+
   build:
     name: Build changed images
     needs: detect-changes
@@ -47,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dir: ${{ fromJSON(needs.detect-changes.outputs.dirs) }}
+        include: ${{ fromJSON(needs.detect-changes.outputs.dirs) }}
 
     steps:
       - uses: actions/checkout@v4
@@ -56,3 +71,4 @@ jobs:
           docker_username: ${{ github.actor }}
           docker_password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ matrix.dir }}
+          version: ${{ matrix.version }}

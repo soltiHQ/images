@@ -8,8 +8,6 @@ vars:
   base_context: src
   registry: "ghcr.io/soltihq"
 
-  default_rust_ver: "1.90.0"
-
 tasks:
   default:
     desc: Show usage
@@ -29,28 +27,29 @@ tasks:
       - |
         docker buildx build \
           --platform {{.platforms | default .default_platforms}} \
-          --file {{.dockerfile | default (print .base_context "/" .CONTEXT "/Dockerfile")}} \
+          --file {{.dockerfile | default (print .base_context "/" .CONTEXT "/" .VERSION "/Dockerfile")}} \
           {{.BUILD_ARGS}} \
           -t {{.registry}}/{{.CONTEXT}}:{{.TAG}} \
           -t {{.registry}}/{{.CONTEXT}}:latest \
           --push \
-          {{.context_path | default (print "./" .base_context "/" .CONTEXT)}}
+          {{.context_path | default (print "./" .base_context "/" .CONTEXT "/" .VERSION)}}
 
 # ================================================#
 # ---------------------IMAGES---------------------#
 # ================================================#
 
-  cargo-tools:
-    desc: Build 'cargo-tools' image.
+  rust-ci:
+    desc: Build 'rust-ci' image.
     silent: true
     vars:
-      VERSION: "{{.default_rust_ver}}"
+      VERSION: "{{.VERSION}}"
       CARGO_AUDIT_VERSION: "0.22.0"
     cmds:
       - task: _docker/buildx
         vars:
           TAG: "{{.VERSION}}"
-          CONTEXT: "cargo-tools"
+          CONTEXT: "rust-ci"
+          VERSION: "{{.VERSION}}"
           BUILD_ARGS: >-
             --build-arg CARGO_AUDIT_VERSION={{.CARGO_AUDIT_VERSION}}
             --build-arg RUST_VERSION={{.VERSION}}
