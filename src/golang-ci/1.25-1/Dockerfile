@@ -5,12 +5,15 @@ ARG OAPI_CODEGEN_VERSION=v2.4.1
 ARG GOFUMPT_VERSION=v0.7.0
 ARG BUF_VERSION=v1.50.0
 
+ENV GOBIN=/usr/local/bin \
+    PATH=/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates git curl \
     && rm -rf /var/lib/apt/lists/*
+
 RUN set -eux; \
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-    | sh -s -- -b /usr/local/bin "${GOLANGCI_LINT_VERSION}"; \
+  go install github.com/golangci/golangci-lint/cmd/golangci-lint@"${GOLANGCI_LINT_VERSION}"; \
   \
   go install mvdan.cc/gofumpt@"${GOFUMPT_VERSION}"; \
   \
@@ -27,6 +30,7 @@ RUN set -eux; \
   chmod +x /usr/local/bin/buf; \
   \
   golangci-lint --version; \
+  gofumpt -version || true; \
   oapi-codegen -version; \
   buf --version
 
