@@ -45,10 +45,12 @@ tasks:
     silent: true
     vars:
       VERSION: "{{.default_rust_ver}}"
+      CARGO_AUDIT_VERSION: "0.22.0"
     cmds:
       - task: _docker/buildx
         vars:
           TAG: "{{.VERSION}}"
           CONTEXT: "cargo-tools"
           BUILD_ARGS: >-
+            --build-arg CARGO_AUDIT_VERSION={{.CARGO_AUDIT_VERSION}}
             --build-arg RUST_VERSION={{.VERSION}}
