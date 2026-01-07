@@ -1,10 +1,11 @@
 ARG RUST_VERSION
+ARG CARGO_AUDIT_VERSION=0.22.0
 
 FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-slim
 
 RUN rustup set profile minimal \
  && rustup component add rustfmt clippy \
- && cargo install cargo-audit --locked --features=fix
+ && cargo install cargo-audit@${CARGO_AUDIT_VERSION} --locked --features=fix
 
 WORKDIR /
 
