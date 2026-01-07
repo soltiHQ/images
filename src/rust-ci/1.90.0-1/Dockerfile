@@ -1,6 +1,4 @@
-ARG RUST_VERSION=1.90.0
-
-FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-slim
+FROM --platform=$BUILDPLATFORM rust:1.90.0-slim
 
 RUN rustup set profile minimal \
   && rustup component add rustfmt clippy \

@@ -29,6 +29,13 @@ tasks:
           --platform {{.platforms | default .default_platforms}} \
           --file {{.dockerfile | default (print .base_context "/" .CONTEXT "/" .VERSION "/Dockerfile")}} \
           {{.BUILD_ARGS}} \
+          --label "org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+          --label "org.opencontainers.image.source=https://github.com/soltihq/images" \
+          --label "org.opencontainers.image.revision=$(git rev-parse HEAD)" \
+          --label "org.opencontainers.image.title={{.CONTEXT}}" \
+          --label "org.opencontainers.image.version={{.TAG}}" \
+          --label "org.opencontainers.image.authors=SoltiHQ" \
+          --label "org.opencontainers.image.vendor=Solti" \
           -t {{.registry}}/{{.CONTEXT}}:{{.TAG}} \
           -t {{.registry}}/{{.CONTEXT}}:latest \
           --push \
@@ -43,13 +50,9 @@ tasks:
     silent: true
     vars:
       VERSION: "{{.VERSION}}"
-      CARGO_AUDIT_VERSION: "0.22.0"
     cmds:
       - task: _docker/buildx
         vars:
           TAG: "{{.VERSION}}"
           CONTEXT: "rust-ci"
           VERSION: "{{.VERSION}}"
-          BUILD_ARGS: >-
-            --build-arg CARGO_AUDIT_VERSION={{.CARGO_AUDIT_VERSION}}
-            --build-arg RUST_VERSION={{.VERSION}}
