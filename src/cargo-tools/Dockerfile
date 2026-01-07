@@ -5,7 +5,7 @@ FROM --platform=$BUILDPLATFORM rust:${RUST_VERSION}-slim
 
 RUN rustup set profile minimal \
  && rustup component add rustfmt clippy \
- && cargo install cargo-audit@${CARGO_AUDIT_VERSION} --locked --features=fix
+ && cargo install cargo-audit --version ${CARGO_AUDIT_VERSION} --locked --features fix
 
 WORKDIR /
 
