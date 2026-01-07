@@ -56,3 +56,15 @@ tasks:
           TAG: "{{.VERSION}}"
           CONTEXT: "rust-ci"
           VERSION: "{{.VERSION}}"
+
+  golang-ci:
+    desc: Build 'golang-ci' image.
+    silent: true
+    vars:
+      VERSION: "{{.VERSION}}"
+    cmds:
+      - task: _docker/buildx
+        vars:
+          TAG: "{{.VERSION}}"
+          CONTEXT: "golang-ci"
+          VERSION: "{{.VERSION}}"

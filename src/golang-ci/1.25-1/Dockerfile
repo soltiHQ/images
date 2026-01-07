@@ -8,7 +8,6 @@ ARG BUF_VERSION=v1.50.0
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ca-certificates git curl \
     && rm -rf /var/lib/apt/lists/*
-
 RUN set -eux; \
   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
     | sh -s -- -b /usr/local/bin "${GOLANGCI_LINT_VERSION}"; \
