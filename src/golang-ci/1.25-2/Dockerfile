@@ -2,6 +2,7 @@ FROM --platform=$BUILDPLATFORM golang:1.25
 
 ARG GOLANGCI_LINT_VERSION=v1.64.5
 ARG OAPI_CODEGEN_VERSION=v2.4.1
+ARG TAILWIND_VERSION=v4.1.18
 ARG GOFUMPT_VERSION=v0.7.0
 ARG TEMPL_VERSION=v0.3.977
 ARG BUF_VERSION=v1.50.0
@@ -31,6 +32,9 @@ RUN set -eux; \
   curl -sSfL "https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-${buf_arch}" \
     -o /usr/local/bin/buf; \
   chmod +x /usr/local/bin/buf; \
+  curl -sSfL "https://github.com/tailwindlabs/tailwindcss/releases/download/${TAILWIND_VERSION}/tailwindcss-linux-${tw_arch}" \
+      -o /usr/local/bin/tailwindcss; \
+  chmod +x /usr/local/bin/tailwindcss; \
   \
   golangci-lint --version; \
   gofumpt -version || true; \
