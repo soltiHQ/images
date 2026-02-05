@@ -11,7 +11,7 @@ ENV GOBIN=/usr/local/bin \
     PATH=/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ca-certificates git curl \
+      ca-certificates git curl watchman \
     && rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -42,12 +42,6 @@ RUN set -eux; \
   \
   curl -sSfL "https://github.com/tailwindlabs/tailwindcss/releases/download/${TAILWIND_VERSION}/tailwindcss-linux-${tw_arch}" \
     -o /usr/local/bin/tailwindcss; \
-  chmod +x /usr/local/bin/tailwindcss; \
-  \
-  golangci-lint --version; \
-  gofumpt -version || true; \
-  oapi-codegen -version; \
-  templ version; \
-  buf --version
+  chmod +x /usr/local/bin/tailwindcss;
 
 WORKDIR /workspace
