@@ -25,15 +25,23 @@ RUN set -eux; \
   \
   arch="$(uname -m)"; \
   case "$arch" in \
-    x86_64) buf_arch="x86_64" ;; \
-    aarch64|arm64) buf_arch="aarch64" ;; \
+    x86_64) \
+      buf_arch="x86_64"; \
+      tw_arch="x64"; \
+      ;; \
+    aarch64|arm64) \
+      buf_arch="aarch64"; \
+      tw_arch="arm64"; \
+      ;; \
     *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
   esac; \
+  \
   curl -sSfL "https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-${buf_arch}" \
     -o /usr/local/bin/buf; \
   chmod +x /usr/local/bin/buf; \
+  \
   curl -sSfL "https://github.com/tailwindlabs/tailwindcss/releases/download/${TAILWIND_VERSION}/tailwindcss-linux-${tw_arch}" \
-      -o /usr/local/bin/tailwindcss; \
+    -o /usr/local/bin/tailwindcss; \
   chmod +x /usr/local/bin/tailwindcss; \
   \
   golangci-lint --version; \
