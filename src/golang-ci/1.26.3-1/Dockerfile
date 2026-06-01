@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.26.3
+FROM golang:1.26.3
 
 ARG GOLANGCI_LINT_VERSION=v1.64.5
 ARG OAPI_CODEGEN_VERSION=v2.4.1
@@ -7,6 +7,7 @@ ARG GOFUMPT_VERSION=v0.7.0
 ARG TEMPL_VERSION=v0.3.977
 ARG BUF_VERSION=v1.50.0
 ARG GOVULNCHECK_VERSION=latest
+ARG TARGETARCH
 
 ENV GOBIN=/usr/local/bin \
     PATH=/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin
@@ -22,11 +23,10 @@ RUN set -eux; \
   go install github.com/a-h/templ/cmd/templ@"${TEMPL_VERSION}"; \
   go install golang.org/x/vuln/cmd/govulncheck@"${GOVULNCHECK_VERSION}"; \
   \
-  arch="$(uname -m)"; \
-  case "$arch" in \
-    x86_64) buf_arch="x86_64"; tw_arch="x64" ;; \
-    aarch64|arm64) buf_arch="aarch64"; tw_arch="arm64" ;; \
-    *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
+  case "${TARGETARCH}" in \
+    amd64) buf_arch="x86_64"; tw_arch="x64" ;; \
+    arm64) buf_arch="aarch64"; tw_arch="arm64" ;; \
+    *) echo "unsupported arch: ${TARGETARCH}" >&2; exit 1 ;; \
   esac; \
   \
   curl -sSfL "https://github.com/bufbuild/buf/releases/download/${BUF_VERSION}/buf-Linux-${buf_arch}" \
