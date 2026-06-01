@@ -4,7 +4,7 @@ ARG BUF_VERSION=v1.50.0
 ARG TARGETARCH
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ca-certificates git curl \
+      ca-certificates git curl clang-format \
     && rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
