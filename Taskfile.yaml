@@ -68,3 +68,15 @@ tasks:
           TAG: "{{.VERSION}}"
           CONTEXT: "golang-ci"
           VERSION: "{{.VERSION}}"
+
+  buf-ci:
+    desc: Build 'buf-ci' image.
+    silent: true
+    vars:
+      VERSION: "{{.VERSION}}"
+    cmds:
+      - task: _docker/buildx
+        vars:
+          TAG: "{{.VERSION}}"
+          CONTEXT: "buf-ci"
+          VERSION: "{{.VERSION}}"
