@@ -26,7 +26,6 @@ ci/<toolchain>/
 
 - Each variant publishes one toolchain version tag.
 - The same build also publishes `<version>-sha-<commit>` for rollback and diagnostics.
-
 - Version tags are updated when their image contract changes.
 - Consumers pin the toolchain version and refresh it in CI.
 
@@ -35,6 +34,7 @@ The workflow does not publish `latest`.
 ## Contributing
 
 Issues and pull requests are welcome.
+
 Read the [contributing guide](https://github.com/soltiHQ/.github/blob/main/CONTRIBUTING.md) before a large change.
 
 <br>
