@@ -24,11 +24,11 @@ ci/<toolchain>/
 | `ci/golang` | `ghcr.io/soltihq/ci/golang`        |
 | `ci/proto`  | `ghcr.io/soltihq/ci/proto`         |
 
-Each variant publishes one toolchain version tag.
-The same build also publishes `<version>-sha-<commit>` for rollback and diagnostics.
+- Each variant publishes one toolchain version tag.
+- The same build also publishes `<version>-sha-<commit>` for rollback and diagnostics.
 
-Version tags are updated when their image contract changes.
-Consumers pin the toolchain version and refresh it in CI.
+- Version tags are updated when their image contract changes.
+- Consumers pin the toolchain version and refresh it in CI.
 
 The workflow does not publish `latest`.
 

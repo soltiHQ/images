@@ -1,4 +1,4 @@
-name: Commit Main
+name: Publish
 
 on:
   push:
