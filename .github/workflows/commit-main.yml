@@ -13,7 +13,7 @@ jobs:
     name: Detect changed directories
     runs-on: ${{ vars.RUNS_ON }}
     outputs:
-      dirs: ${{ steps.get-changes.outputs.changes }}
+      matrix: ${{ steps.get-changes.outputs.matrix }}
 
     steps:
       - uses: actions/checkout@v6
@@ -24,51 +24,75 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v44
         with:
-          files: src/**
+          files: ci/**
           dir_names: true
-          dir_names_max_depth: 3
+          dir_names_max_depth: 2
 
       - name: Prepare matrix
         id: get-changes
+        shell: bash
+        env:
+          CHANGED_CONTEXTS: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          if [ -n "${{ steps.changed-files.outputs.all_changed_files }}" ]; then
-            MATRIX="["
-            FIRST=true
-          
-            for path in ${{ steps.changed-files.outputs.all_changed_files }}; do
-              DIR=$(echo "$path" | cut -d'/' -f2)
-              VERSION=$(echo "$path" | cut -d'/' -f3)
-          
-              [ "$FIRST" = true ] || MATRIX+=","
-              FIRST=false
-          
-              MATRIX+="{\"dir\":\"$DIR\",\"version\":\"$VERSION\"}"
-            done
-          
-            MATRIX+="]"
-            MATRIX=$(echo "$MATRIX" | jq -c 'unique')
-          else
-            MATRIX="[]"
-          fi
-          
-          echo "changes=$MATRIX" >> "$GITHUB_OUTPUT"
-          echo "Changed directories: $MATRIX"
+          set -euo pipefail
+
+          matrix=$(
+            for context in $CHANGED_CONTEXTS; do
+              manifest="$context/variants.yaml"
+              dockerfile="$context/Dockerfile"
+
+              if [ ! -d "$context" ]; then
+                continue
+              fi
+
+              if [ ! -f "$manifest" ] || [ ! -f "$dockerfile" ]; then
+                echo "::error::$context must contain Dockerfile and variants.yaml" >&2
+                exit 1
+              fi
+
+              yq -o=json '.' "$manifest" | jq -ce \
+                --arg image "$context" \
+                --arg context "$context" '
+                  if (
+                    .schema == 1
+                    and (.variants | type == "array" and length > 0)
+                    and all(.variants[];
+                      (.tag | type == "string" and length > 0)
+                      and (.build_args | type == "object")
+                      and all(.build_args[]; type == "string")
+                    )
+                  )
+                  then .variants[] | {
+                    image: $image,
+                    context: $context,
+                    tag,
+                    build_args: (.build_args | to_entries | map("\(.key)=\(.value)") | join("\n"))
+                  }
+                  else error("invalid image contract: \($context)")
+                  end
+                '
+            done | jq -sc 'unique_by([.image, .tag])'
+          )
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "Build matrix: $matrix"
 
   build:
     name: Build changed images
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.dirs != '[]' && needs.detect-changes.outputs.dirs != '' }}
+    if: needs.detect-changes.outputs.matrix != '[]'
     runs-on: ${{ vars.RUNS_ON }}
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.detect-changes.outputs.dirs) }}
+        include: ${{ fromJSON(needs.detect-changes.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v6
-      - uses: soltiHQ/actions/ghcr-build@main
+      - uses: soltiHQ/actions/ghcr-build@v1
         with:
           docker_username: ${{ github.actor }}
           docker_password: ${{ secrets.GITHUB_TOKEN }}
-          image: ${{ matrix.dir }}
-          version: ${{ matrix.version }}
+          image: ${{ matrix.image }}
+          tag: ${{ matrix.tag }}
+          context: ${{ matrix.context }}
+          build_args: ${{ matrix.build_args }}

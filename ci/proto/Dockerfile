@@ -1,6 +1,8 @@
-FROM debian:bookworm-slim
+# check=skip=InvalidDefaultArgInFrom
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
-ARG BUF_VERSION=v1.50.0
+ARG BUF_VERSION
 ARG TARGETARCH
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

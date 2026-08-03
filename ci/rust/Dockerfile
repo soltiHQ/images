@@ -1,4 +1,8 @@
-FROM rust:1.90.0-slim
+# check=skip=InvalidDefaultArgInFrom
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG CARGO_AUDIT_VERSION
 
 RUN apt-get update \
   && apt-get install --yes --no-install-recommends protobuf-compiler \
@@ -6,7 +10,7 @@ RUN apt-get update \
   && rustup set profile minimal \
   && rustup component add rustfmt clippy \
   && rustup toolchain install nightly --profile minimal \
-  && cargo install cargo-audit --version 0.22.0 --locked --features fix
+  && cargo install cargo-audit --version "${CARGO_AUDIT_VERSION}" --locked --features fix
 
 WORKDIR /workspace
 ENTRYPOINT ["cargo"]

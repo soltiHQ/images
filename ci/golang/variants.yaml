@@ -1,0 +1,33 @@
+schema: 1
+
+variants:
+  - tag: "1.26.1"
+    build_args:
+      BASE_IMAGE: "golang:1.26.1"
+      BUF_VERSION: "v1.50.0"
+      GOFUMPT_VERSION: "v0.7.0"
+      GOLANGCI_LINT_VERSION: "v1.64.5"
+      GOVULNCHECK_VERSION: "latest"
+      OAPI_CODEGEN_VERSION: "v2.4.1"
+      TAILWIND_VERSION: "v4.1.18"
+      TEMPL_VERSION: "v0.3.977"
+  - tag: "1.26.3"
+    build_args:
+      BASE_IMAGE: "golang:1.26.3"
+      BUF_VERSION: "v1.50.0"
+      GOFUMPT_VERSION: "v0.7.0"
+      GOLANGCI_LINT_VERSION: "v1.64.5"
+      GOVULNCHECK_VERSION: "latest"
+      OAPI_CODEGEN_VERSION: "v2.4.1"
+      TAILWIND_VERSION: "v4.1.18"
+      TEMPL_VERSION: "v0.3.977"
+  - tag: "1.26.4"
+    build_args:
+      BASE_IMAGE: "golang:1.26.4"
+      BUF_VERSION: "v1.50.0"
+      GOFUMPT_VERSION: "v0.7.0"
+      GOLANGCI_LINT_VERSION: "v1.64.5"
+      GOVULNCHECK_VERSION: "latest"
+      OAPI_CODEGEN_VERSION: "v2.4.1"
+      TAILWIND_VERSION: "v4.1.18"
+      TEMPL_VERSION: "v0.3.977"

@@ -1,0 +1,7 @@
+schema: 1
+
+variants:
+  - tag: "1.90.0"
+    build_args:
+      BASE_IMAGE: "rust:1.90.0-slim"
+      CARGO_AUDIT_VERSION: "0.22.0"

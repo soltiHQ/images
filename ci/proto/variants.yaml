@@ -1,0 +1,7 @@
+schema: 1
+
+variants:
+  - tag: "1.50.0"
+    build_args:
+      BASE_IMAGE: "debian:bookworm-slim"
+      BUF_VERSION: "v1.50.0"
