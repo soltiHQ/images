@@ -18,11 +18,13 @@ ci/<toolchain>/
 └── variants.yaml
 ```
 
-| Contract    | Registry image                     |
-|-------------|------------------------------------|
-| `ci/rust`   | `ghcr.io/soltihq/ci/rust`          |
-| `ci/golang` | `ghcr.io/soltihq/ci/golang`        |
-| `ci/proto`  | `ghcr.io/soltihq/ci/proto`         |
+| Contract       | Registry image                 |
+|----------------|--------------------------------|
+| `ci/rust`      | `ghcr.io/soltihq/ci/rust`      |
+| `ci/golang`    | `ghcr.io/soltihq/ci/golang`    |
+| `ci/proto`     | `ghcr.io/soltihq/ci/proto`     |
+| `ci/node`      | `ghcr.io/soltihq/ci/node`      |
+| `ci/terraform` | `ghcr.io/soltihq/ci/terraform` |
 
 - Each variant publishes one toolchain version tag.
 - The same build also publishes `<version>-sha-<commit>` for rollback and diagnostics.
