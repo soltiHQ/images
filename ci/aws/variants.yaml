@@ -1,7 +1,7 @@
 schema: 1
 
 variants:
-  - tag: "1.15.8"
+  - tag: "2.36.24"
     build_args:
       BASE_IMAGE: "debian:bookworm-slim"
-      TERRAFORM_VERSION: "1.15.8"
+      AWS_CLI_VERSION: "2.36.24"

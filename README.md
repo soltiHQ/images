@@ -20,6 +20,7 @@ ci/<toolchain>/
 
 | Contract       | Registry image                 |
 |----------------|--------------------------------|
+| `ci/aws`       | `ghcr.io/soltihq/ci/aws`       |
 | `ci/rust`      | `ghcr.io/soltihq/ci/rust`      |
 | `ci/golang`    | `ghcr.io/soltihq/ci/golang`    |
 | `ci/proto`     | `ghcr.io/soltihq/ci/proto`     |
